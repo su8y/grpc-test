@@ -61,9 +61,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  std::string server = "0.0.0.0:8080";
+  std::string socket = "unix:/tmp/helloworld.sock";
   GreeterClient greeter(
-      grpc::CreateChannel(server, grpc::InsecureChannelCredentials()));
+      grpc::CreateChannel(socket, grpc::InsecureChannelCredentials()));
 
   // test 반복 인자 입력
   int count = std::stoi(argv[1]);

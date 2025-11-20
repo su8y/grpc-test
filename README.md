@@ -1,4 +1,5 @@
-### grpc vs fork() 비교 
+## grpc 최적화 linux system 테스트
+![all](./assets/all.svg)
 
 ### 기존 fork() 방식
 - 평균값 5773.38us
@@ -6,13 +7,25 @@
 - 최소값 4721us
 - 변동폭 3984us
 
-
-
 ### grpc + http
-![graph](./assets/grpchttpVsFork.svg)
 - 평균값 929.1us `x6.21`
 - 최대값 1388us: 최초 연결시에 3729us
 - 최소값 820us
 - 변동폭 568us `x7.01` 
 
 >  - 최초 연결시 초기 스파이크가 존재합니다.
+
+
+### grpc + uds
+- 평균 1019.97us
+- 최소 928us
+- 변동폭 516us 
+- 최대 1444.00(최초 연결 3439 us)
+
+
+tcp vs uds 는 오직 전송 시간만 줄여준다. 
+gRPC의 경우, Protobuf가 데이터를 압축하고 푸는 과정과 HTTP/2 프레임을 만드는 오버헤드가 CPU를 꽤 많이 사용한다. 
+- 추가로 리눅스의 TCP Loopback은 이미 최적화가 되어있어 localhost 통신을 감지하면 패킷을 네트워크로 보내지 않고 커널 메모리 내에서 바로 `Bypass`한다.
+- 추가로 UDS는 tcp보다 빠른 구간은 연결을 맺는 순간이다. 3-way handshake가 없어서빠르다.
+  - 하지만 gRPC는 HTTP/2 기반이라 한 번 연결을 맺으면 그 연결을 끊지 않고 계속 재사용한다. 
+  - 따라서 초기 연결 비용 절감 효과를 볼 기회가 별로 없다. 
