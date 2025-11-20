@@ -1,5 +1,10 @@
 ## grpc 최적화 linux system 테스트
-![all](./assets/all.svg)
+**크게보기**
+<div style="overflow-x: auto; white-space: nowrap;">
+  <img src="./assets/long.svg" alt="long image">
+</div>
+
+![short](./assets/short.svg)
 
 
 ### 요약 
